@@ -7,10 +7,11 @@ This repository contains a simple visualization tool for the effects of Vyvanse 
 ## Features
 
 - **Dose Management:** Add single or daily doses with specific dosages (in mg), dates, and times. You can also remove individual doses or clear all scheduled doses.
-- **Pharmacokinetic Simulation:** The application uses a one-compartment pharmacokinetic model to simulate the drug's concentration over time. It considers a fixed absorption half-life and a configurable elimination half-life for Dexamfetamine.
+- **Pharmacokinetic Simulation:** The application uses a one-compartment pharmacokinetic model to simulate the drug's concentration over time. It considers a configurable elimination half-life for Dexamfetamine and derives the absorption profile from a target time to peak concentration (Tmax).
 - **Interactive Chart:** The simulation results are displayed on an interactive line chart. The chart shows the relative concentration of Dexamfetamine in the blood plasma over the simulated period.
 - **Configurable Parameters:** Adjust several parameters for the simulation:
   - **Dexamfetamine Half-Life:** The elimination half-life of the drug in hours.
+  - **Absorption Peak (Tmax):** The target time (in hours) to reach peak plasma concentration; the simulator solves for an absorption rate constant that matches this value.
   - **Simulation Days:** The total duration of the simulation in days.
   - **Y-Axis Max:** The maximum value for the Y-axis of the chart, allowing for better visualization of the concentration levels.
 - **Sleep Cycle Visualization:** The chart includes shaded areas to represent typical sleep periods (from 11 PM to 6 AM), helping users understand how the drug's concentration might affect their sleep.
@@ -27,7 +28,7 @@ Where:
 
 - `C(t)`: The plasma concentration at time `t`.
 - `Dose`: The dosage in milligrams (mg).
-- `ka`: The absorption rate constant. The simulation uses a fixed absorption half-life of 1 hour, which gives `ka = ln(2) / 1`.
+- `ka`: The absorption rate constant. Rather than assuming a fixed absorption half-life, the simulator numerically solves for the `ka` that produces the user-selected time to peak concentration (Tmax) when combined with the chosen elimination half-life.
 - `ke`: The elimination rate constant, calculated from the user-defined elimination half-life (`ke = ln(2) / half-life`).
 - `t`: The time in hours since the dose was administered.
 

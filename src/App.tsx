@@ -9,6 +9,7 @@ function App() {
   
   // Form state
   const [halfLife, setHalfLife] = useState(11);
+  const [absorptionTmax, setAbsorptionTmax] = useState(3.5);
   const [newDoseMg, setNewDoseMg] = useState(30);
   const [newDoseTime, setNewDoseTime] = useState('08:00');
   const [newDoseDate, setNewDoseDate] = useState(new Date().toISOString().split('T')[0]);
@@ -16,9 +17,15 @@ function App() {
   const [yAxisMax, setYAxisMax] = useState<number | undefined>(undefined);
 
   useEffect(() => {
-    const data = generateChartData(doses, halfLife, simulationDays);
+    const data = generateChartData(
+      doses,
+      halfLife,
+      simulationDays,
+      0.5,
+      absorptionTmax
+    );
     setChartData(data);
-  }, [doses, halfLife, simulationDays]);
+  }, [doses, halfLife, simulationDays, absorptionTmax]);
 
   const addDose = () => {
     const [hours, minutes] = newDoseTime.split(':').map(Number);
@@ -44,12 +51,12 @@ function App() {
 
     const newDoses: Dose[] = [];
     for (let i = 0; i < days; i++) {
-        const doseDateTime = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000);
-        newDoses.push({ time: doseDateTime.getTime(), mg: newDoseMg });
+      const doseDateTime = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000);
+      newDoses.push({ time: doseDateTime.getTime(), mg: newDoseMg });
     }
 
     setDoses(prevDoses => [...prevDoses, ...newDoses].sort((a, b) => a.time - b.time));
-  }
+  };
 
   return (
     <div className="App">
@@ -65,6 +72,17 @@ function App() {
               type="number"
               value={halfLife}
               onChange={(e) => setHalfLife(Number(e.target.value))}
+            />
+          </div>
+          <div className="control-item">
+            <label htmlFor="tmax">Absorption Peak (Tmax) Hours</label>
+            <input
+              id="tmax"
+              type="number"
+              value={absorptionTmax}
+              min={0.5}
+              step={0.1}
+              onChange={(e) => setAbsorptionTmax(Number(e.target.value))}
             />
           </div>
           <div className="control-item">
