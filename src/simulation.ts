@@ -85,7 +85,7 @@ export function generateChartData(
     }
     
     const date = new Date(currentTime);
-    labels.push(date.toLocaleString());
+    labels.push(date.toLocaleDateString());
     data.push(totalConcentration);
   }
 

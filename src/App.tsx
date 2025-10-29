@@ -13,6 +13,7 @@ function App() {
   const [newDoseTime, setNewDoseTime] = useState('08:00');
   const [newDoseDate, setNewDoseDate] = useState(new Date().toISOString().split('T')[0]);
   const [simulationDays, setSimulationDays] = useState(5);
+  const [yAxisMax, setYAxisMax] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     const data = generateChartData(doses, halfLife, simulationDays);
@@ -52,7 +53,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Vyvanse Plasma Concentration Simulator</h1>
+      <h1>VyvanseViz Plasma Concentration Simulator</h1>
       
       <div className="controls">
         <h2>Configuration</h2>
@@ -77,10 +78,20 @@ function App() {
               onChange={(e) => setSimulationDays(Number(e.target.value))}
             />
           </div>
+          <div className="control-item">
+            <label htmlFor="yAxisMax">Y-Axis Max</label>
+            <input
+              id="yAxisMax"
+              type="number"
+              value={yAxisMax || ''}
+              onChange={(e) => setYAxisMax(e.target.value ? Number(e.target.value) : undefined)}
+              placeholder="Auto"
+            />
+          </div>
         </div>
       </div>
 
-      <Chart chartData={chartData} />
+      <Chart chartData={chartData} yAxisMax={yAxisMax} />
 
       
       <div className="controls">
