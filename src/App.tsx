@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import Chart from './Chart';
-import { generateChartData, Dose } from './simulation';
+import { generateChartData, type Dose } from './simulation';
 
 function App() {
   const [doses, setDoses] = useState<Dose[]>([]);

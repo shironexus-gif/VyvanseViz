@@ -1,4 +1,3 @@
-
 export interface Dose {
   time: number; // Unix timestamp in milliseconds
   mg: number;
@@ -63,7 +62,7 @@ export function generateChartData(
     return { labels: [], datasets: [] };
   }
 
-  const labels: string[] = [];
+  const labels: number[] = [];
   const data: number[] = [];
   
   const startTime = doses.reduce((min, d) => Math.min(min, d.time), Infinity);
@@ -84,8 +83,7 @@ export function generateChartData(
       }
     }
     
-    const date = new Date(currentTime);
-    labels.push(date.toLocaleDateString());
+    labels.push(currentTime);
     data.push(totalConcentration);
   }
 
