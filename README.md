@@ -1,73 +1,63 @@
-# React + TypeScript + Vite
+# VyvanseViz
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository has been mostly vibe coded - please do not take it for a thought through and properly build project.
 
-Currently, two official plugins are available:
+This repository contains a simple visualization tool for the effects of Vyvanse over time. It simulates and visualizes the blood plasma concentration of Dexamfetamine, the active metabolite of Vyvanse.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+- **Dose Management:** Add single or daily doses with specific dosages (in mg), dates, and times. You can also remove individual doses or clear all scheduled doses.
+- **Pharmacokinetic Simulation:** The application uses a one-compartment pharmacokinetic model to simulate the drug's concentration over time. It considers a fixed absorption half-life and a configurable elimination half-life for Dexamfetamine.
+- **Interactive Chart:** The simulation results are displayed on an interactive line chart. The chart shows the relative concentration of Dexamfetamine in the blood plasma over the simulated period.
+- **Configurable Parameters:** Adjust several parameters for the simulation:
+  - **Dexamfetamine Half-Life:** The elimination half-life of the drug in hours.
+  - **Simulation Days:** The total duration of the simulation in days.
+  - **Y-Axis Max:** The maximum value for the Y-axis of the chart, allowing for better visualization of the concentration levels.
+- **Sleep Cycle Visualization:** The chart includes shaded areas to represent typical sleep periods (from 11 PM to 6 AM), helping users understand how the drug's concentration might affect their sleep.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Pharmacokinetic Model
 
-## Expanding the ESLint configuration
+The simulation is based on a one-compartment model with first-order absorption and elimination. The plasma concentration `C` at a given time `t` after a single dose is calculated using the following formula:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+C(t) = (Dose * (ka / (ka - ke))) * (exp(-ke * t) - exp(-ka * t))
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Where:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- `C(t)`: The plasma concentration at time `t`.
+- `Dose`: The dosage in milligrams (mg).
+- `ka`: The absorption rate constant. The simulation uses a fixed absorption half-life of 1 hour, which gives `ka = ln(2) / 1`.
+- `ke`: The elimination rate constant, calculated from the user-defined elimination half-life (`ke = ln(2) / half-life`).
+- `t`: The time in hours since the dose was administered.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+For multiple doses, the total concentration at any given time is the sum of the concentrations from all previous doses.
+
+## Getting Started
+
+To get a local copy up and running, follow these simple steps.
+
+### Cloning the Repository
+
+1. Clone the repo
+
+   ```sh
+   git clone https://github.com/yoha-dev/VyvanseViz.git
+
+   ```
+
+2. Installation
+
+   ```sh
+   npm install
+   ```
+
+## Usage
+
+1.  Start the development server:
+    ```sh
+    npm run dev
+    ```
+2.  Open your browser and navigate to the local URL provided.
+3.  Use the controls to configure the simulation parameters and add doses.
+4.  The chart will update in real-time to show the simulated blood plasma concentration.
